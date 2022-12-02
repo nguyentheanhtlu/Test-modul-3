@@ -3,7 +3,8 @@ const BaseController = require('./base.controller');
 const fs = require('fs');
 const url = require('url');
 const qs = require('qs');
-let idStudent ="";
+let idStudent = "";
+
 class AuthController extends BaseController {
 
 
@@ -116,24 +117,49 @@ class AuthController extends BaseController {
 
     async Add(req, res) {
 
-            let data = '';
-            req.on('data', chunk => {
-                data += chunk;
-            })
-            req.on('end', async () => {
-                const student = qs.parse(data);
-                console.log(student)
-                const sql = `INSERT INTO Students (Name, Class, PoinLT, PoinTH, Evaluate, Description)values ("${student.nameAdd}",
+        let data = '';
+        req.on('data', chunk => {
+            data += chunk;
+        })
+        req.on('end', async () => {
+            const student = qs.parse(data);
+            console.log(student)
+            const sql = `INSERT INTO Students (Name, Class, PoinLT, PoinTH, Evaluate, Description)
+                         values ("${student.nameAdd}",
                                  "${student.classAdd}",
                                  +${student.theoryMarkAdd},
                                  +${student.practiceMarkAdd},
                                  "${student.evaluateAdd}",
                                  "${student.describesAdd}")`;
-                await this.querySQL(sql);
-                res.writeHead(301, {'Location': '/'});
-                return res.end();
-            });
-        }
+            await this.querySQL(sql);
+            res.writeHead(301, {'Location': '/'});
+            return res.end();
+        });
+    }
+
+    async UpdateStudent(req, res) {
+        let data = '';
+        req.on('data', chunk => {
+            data += chunk;
+        })
+        req.on('end', async () => {
+            const students = qs.parse(data);
+            console.log(students)
+            const sql = `UPDATE Students
+                         SET  Name="${students.nameUpdate}",
+                              Class="${students.classUpdate}",
+                              PoinLT=${students.Name},
+                              PoinTH= ${students.practiceMarkUpdate},
+                              Evaluate="${students.evaluateUpdate}",
+                              Description="${students.descriptionUpdate}"
+                              WHERE ID=${idStudent}`
+            await this.querySQL(sql);
+            res.writeHead(301, {'Location': '/'});
+            return res.end();
+        });
+
+
+    }
 
 
 }

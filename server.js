@@ -20,7 +20,14 @@ const server = http.createServer((req, res) => {
             break;
 
         case '/Edit':
-            authcontroller.Edit(req, res);
+            if(req.method == 'GET'){
+                authcontroller.Edit(req, res);
+            }
+            else {
+                authcontroller.UpdateStudent(req, res);
+
+            }
+
             break;
         case '/ShowFormAdd':
             if (req.method == 'GET') {
